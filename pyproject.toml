@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yt2abs"
+version = "0.3.0"
+description = "YouTube audio -> Audiobookshelf podcast episodes"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "fastapi>=0.110",
+  "uvicorn>=0.27",
+  "PyYAML>=6.0",
+  # The ``default`` extra brings ``yt-dlp-ejs`` (JS challenge solver used by
+  # Deno) and ``mutagen`` (thumbnail/metadata embedding). A bare ``yt-dlp``
+  # leaves Deno without the ``lib`` solver script, so n/sig challenges fail.
+  "yt-dlp[default]",
+]
+
+[project.optional-dependencies]
+dev = ["httpx>=0.27"]
+
+[project.scripts]
+yt2abs = "yt2abs.__main__:main"
+
+[tool.setuptools]
+packages = ["yt2abs"]
+license-files = ["LICENSE"]
+
+[tool.setuptools.package-data]
+yt2abs = ["static/*"]

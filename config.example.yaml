@@ -1,0 +1,110 @@
+# yt2abs - example configuration.
+# Copy to config.yaml and adjust. Unknown keys are ignored by the config
+# loader, so extra sections (abs, worker, ...) can live in the same file.
+defaults:
+  retention_days: 14          # null = keep forever; counted from the moment of marking
+                              # 0 = delete on the next retention run
+  protect_unfinished: true    # defer deletion while ABS playback is unfinished (max 2xN)
+  sponsorblock: false         # off | remove | mark | mute | <mode>:<category,list>
+  sponsorblock_api: https://sponsor.ajay.app
+  # Hosts where YouTube returns 403 for the default clients can fall back to:
+  # ytdlp_args: ["--extractor-args", "youtube:player_client=web_embedded"]
+
+abs:
+  url: http://192.168.1.10:13378      # Audiobookshelf base URL (container -> host)
+  # api_key is read from the environment: ABS_API_KEY (never put it here)
+  library_id: ""                  # id of the podcast library, e.g. 5b17aeb7-...
+  library_path: /youtube-podcasts # path as seen by Audiobookshelf AND yt2abs
+  # Whose ABS playback protects unfinished episodes (protect_unfinished).
+  # Empty = read every account through /api/users, which needs an admin API
+  # key; if that fails yt2abs falls back to the key owner and reports it.
+  # Set a username or user id to limit the check to one listener.
+  progress_user: ""
+  timeout: 30
+  scan_timeout: 90                # how long to wait for a scan to index a new episode
+  scan_interval: 3
+
+api:
+  # No authentication: yt2abs is LAN-only, so the reachable port is the access
+  # control.  Never publish it on a public address; keep the reverse proxy ACL.
+  # Public HTTPS address of the reverse proxy.  Optional; used to build the
+  # bookmarklet link and to keep redirects on https.
+  public_url: https://yt2abs.example.com
+  # Dotted host names this service answers to.  IP literals, "localhost" and
+  # single-label names are always accepted; anything else needs an entry here
+  # (this is the DNS-rebinding guard).  Example: [yt2abs.example.com, nas.lan]
+  allowed_hosts: []
+  rate_limit_per_minute: 60       # /api/* and HTML pages, per client IP; 0 = no limit
+  public_rate_limit_per_minute: 10 # GET /add (bookmarklet), per client IP; 0 = no limit
+  # Forwarding headers are honoured ONLY when the TCP peer matches this list.
+  # Enter the EXACT address the proxy shows as `client_addr` in the access log,
+  # e.g. 10.1.2.1/32.  Host bits (10.1.2.1/8) are rejected instead of silently
+  # widening to 10.0.0.0/8; prefixes shorter than /16 (IPv4) / /48 (IPv6) warn.
+  trust_proxy: false              # true + empty list: trusts every peer (warns)
+  trusted_proxies: []             # e.g. ["10.1.2.1/32"]
+  # A list that covers EVERY peer (0.0.0.0/0, ::/0 or split /1 prefixes) lets
+  # any client spoof X-Forwarded-For and pick its own rate-limit bucket; the
+  # app warns at startup.  Set this switch only if you accept that explicitly.
+  trust_any_peer: false
+
+retention:
+  interval_minutes: 60            # hourly retention pass
+  run_on_startup: true            # run once right after the process starts
+  dry_run: false                  # true = compute/report only, never write or delete
+  # Safety fuse for ABS reconcile: a pass that would mark more rows deleted than
+  # the smaller of these two caps is reported (and alerted) with zero writes.
+  # 0 disables the respective cap.
+  reconcile_max_deletions: 20
+  reconcile_max_fraction: 0.2
+
+playlist:
+  # "Add from phone": poll one unlisted YouTube playlist and queue new videos.
+  # Disabled by default; the runtime kill-switch is YT2ABS_PLAYLIST_ENABLED=0.
+  enabled: false
+  url: ""                         # e.g. https://www.youtube.com/playlist?list=PL...
+  interval_minutes: 15            # min 5; a small delay is acceptable
+  # timeout: 120                  # yt-dlp listing timeout (seconds)
+
+ytdlp:
+  update: true                    # check PyPI and refresh yt-dlp
+  interval_hours: 24              # daily check
+  # bin_dir: /data/bin            # default: <paths.data_dir>/bin (persistent volume)
+  # command: /usr/local/bin/yt-dlp # override the executable (testing)
+
+paths:
+  data_dir: /data                 # SQLite database location (and bin/ for yt-dlp)
+  tmp_dir: /tmp-downloads         # preferably the same filesystem as library_path
+  # library_path: /mnt/user/media/youtube-podcasts  # only when yt2abs sees a
+  # different mount than ABS (local development / E2E); defaults to abs.library_path
+
+worker:
+  max_attempts: 3
+  retry_backoff_seconds: [60, 300, 900]
+  poll_interval: 2
+
+channels:
+  # Everything: cutting sponsor segments out of the downloaded file.
+  UCzz4CoEgSgWNs9ZAvRMhW2A:
+    name: Everything Electric CARS
+    retention_days: 7
+    sponsorblock: remove            # == remove:sponsor
+
+  # Muting instead of cutting (file length stays the same).
+  UCEXAMPLEmute00000000000:
+    name: Kanal z wyciszaniem
+    sponsorblock: mute:sponsor,selfpromo
+
+  # Keeping the audio untouched, only mark the segments as chapters.
+  UCEXAMPLEmark00000000000:
+    name: Kanal z rozdzialami
+    sponsorblock: mark:sponsor,intro
+
+  # Explicit opt-out even if defaults change later.
+  UCEXAMPLEoff000000000000:
+    name: Kanal bez zmian
+    sponsorblock: off
+
+  # Archive channel: keep forever, even when defaults.retention_days changes.
+  UCEXAMPLEkeep00000000000:
+    name: Kanal archiwalny
+    retention_days: null

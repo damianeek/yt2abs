@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>yt2abs</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="popup">
+    <header class="bar">
+      <img src="icons/icon-32.png" alt="" class="logo" />
+      <span class="brand">yt2abs</span>
+      <button id="open-options" class="icon" type="button" title="Settings" aria-label="Settings">⚙</button>
+    </header>
+    <main>
+      <section id="view-setup" hidden>
+        <p class="lead">First enter your yt2abs server address.</p>
+        <button id="setup-open" class="primary" type="button">Open settings</button>
+      </section>
+
+      <section id="view-unsupported" hidden>
+        <p class="lead">Open a YouTube video (watch) or Shorts.</p>
+      </section>
+
+      <section id="view-video" hidden>
+        <h1 id="video-title" class="title"></h1>
+        <p class="channel" id="channel-name"></p>
+        <p class="policy" id="policy"></p>
+        <div class="status-row">
+          <span id="status" class="status muted">Not sent</span>
+          <span id="status-detail" class="detail"></span>
+        </div>
+        <div class="actions">
+          <button id="send" class="primary" type="button">Send</button>
+          <button id="send-keep" type="button">Keep forever</button>
+        </div>
+        <p id="hint" class="hint" hidden></p>
+      </section>
+
+      <p id="error" class="error" hidden></p>
+    </main>
+    <footer>
+      <span id="server-label" class="muted"></span>
+    </footer>
+    <script src="lib.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

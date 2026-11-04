@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>yt2abs · YouTube → Audiobookshelf</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">▶</span>
+    <div>
+      <h1>yt2abs</h1>
+      <p>YouTube → Audiobookshelf</p>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" aria-label="Sections">
+    <button class="tab active" type="button" role="tab" aria-selected="true" data-tab="queue">Queue</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-tab="channels">Channels</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-tab="config">Configuration</button>
+  </nav>
+</header>
+
+<main>
+  <section id="tab-queue" class="tab-panel active" role="tabpanel">
+    <section class="panel">
+      <h2>Add video</h2>
+      <form id="add-form" class="add-form">
+        <label class="field grow">
+          <span>YouTube video link</span>
+          <input id="add-url" name="url" type="url" inputmode="url" autocomplete="off"
+                 placeholder="https://www.youtube.com/watch?v=..." required>
+        </label>
+        <label class="field">
+          <span>Retention</span>
+          <select id="add-retention">
+            <option value="default">per channel policy</option>
+            <option value="keep">keep forever</option>
+            <option value="days">custom number of days…</option>
+          </select>
+        </label>
+        <label class="field narrow" id="add-days-field" hidden>
+          <span>Days</span>
+          <input id="add-days" type="number" min="1" step="1" value="7">
+        </label>
+        <button class="primary" type="submit">Add to queue</button>
+      </form>
+      <p id="add-result" class="notice" role="status" hidden></p>
+    </section>
+
+    <section class="panel">
+      <div class="list-head">
+        <div>
+          <h2>Jobs</h2>
+          <p id="queue-summary" class="muted">Loading…</p>
+        </div>
+        <button id="refresh-jobs" class="ghost" type="button">Refresh</button>
+      </div>
+      <div id="filters" class="filters" role="group" aria-label="Status filter">
+        <button class="chip active" type="button" data-filter="active">Active</button>
+        <button class="chip" type="button" data-filter="all">All</button>
+        <button class="chip" type="button" data-filter="queued">Queued</button>
+        <button class="chip" type="button" data-filter="downloading">Downloading</button>
+        <button class="chip" type="button" data-filter="imported">Imported</button>
+        <button class="chip" type="button" data-filter="failed">Errors</button>
+        <button class="chip" type="button" data-filter="deleted">Deleted</button>
+      </div>
+      <div id="job-list" class="cards" aria-live="polite">
+        <p class="empty">Loading…</p>
+      </div>
+    </section>
+  </section>
+
+  <section id="tab-channels" class="tab-panel" role="tabpanel" hidden>
+    <section class="panel">
+      <div class="list-head">
+        <div>
+          <h2>Channels</h2>
+          <p id="channel-summary" class="muted">Loading…</p>
+        </div>
+        <button id="refresh-channels" class="ghost" type="button">Refresh</button>
+      </div>
+      <p class="hint">
+        The policy from <code>config.yaml</code> is the baseline. Changes saved here go to the
+        yt2abs database, apply immediately and survive container restarts. “Keep forever”
+        also protects older episodes — the deadline counts from when the video was marked.
+      </p>
+      <p id="channel-result" class="notice" role="status" hidden></p>
+      <div id="channel-list" class="channel-list" aria-live="polite">
+        <p class="empty">Loading…</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Add channel</h2>
+      <form id="add-channel-form" class="add-form">
+        <label class="field grow">
+          <span>Channel ID or link</span>
+          <input id="add-channel-id" type="text" autocomplete="off" required
+                 placeholder="UC... or https://www.youtube.com/@name">
+        </label>
+        <label class="field grow">
+          <span>Name (optional)</span>
+          <input id="add-channel-name" type="text" autocomplete="off" placeholder="e.g. My podcasts">
+        </label>
+        <button class="primary" type="submit">Add channel</button>
+      </form>
+      <p id="add-channel-result" class="notice" role="status" hidden></p>
+    </section>
+  </section>
+
+  <section id="tab-config" class="tab-panel" role="tabpanel" hidden>
+    <section class="panel">
+      <div class="list-head">
+        <h2>Configuration</h2>
+        <button id="refresh-config" class="ghost" type="button">Refresh</button>
+      </div>
+      <div id="config-grid" class="config-grid" aria-live="polite">
+        <p class="empty">Loading…</p>
+      </div>
+      <div class="config-actions">
+        <button id="run-retention" class="ghost" type="button">Run retention now</button>
+        <button id="update-ytdlp" class="ghost" type="button">Update yt-dlp</button>
+        <a class="button-link" href="/settings">Discord notifications</a>
+        <a class="button-link" href="/bookmarklet">Bookmarklet</a>
+      </div>
+      <p id="config-result" class="notice" role="status" hidden></p>
+    </section>
+  </section>
+</main>
+
+<p id="toast" class="toast" role="alert" hidden></p>
+
+<template id="job-template">
+  <article class="job-card">
+    <img class="thumb" alt="" loading="lazy" width="160" height="90">
+    <div class="job-main">
+      <div class="job-title-row">
+        <h3 class="job-title"></h3>
+        <span class="badge"></span>
+      </div>
+      <p class="job-meta"></p>
+      <p class="job-retention"></p>
+      <p class="job-error" hidden></p>
+    </div>
+    <div class="job-actions"></div>
+  </article>
+</template>
+
+<script src="/static/app.js" defer></script>
+</body>
+</html>

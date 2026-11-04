@@ -1,0 +1,27 @@
+# Third-party notices
+
+yt2abs itself is MIT-licensed (see `LICENSE`). The Docker image and the source
+tree bundle or depend on the following components; their licences apply to them.
+
+| Component | Licence | Notes |
+| --- | --- | --- |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Unlicense | downloaded at build time and updated at runtime |
+| [yt-dlp-ejs](https://github.com/yt-dlp/yt-dlp-ejs) | Unlicense | JS challenge solver shipped with `yt-dlp[default]` |
+| [Deno](https://github.com/denoland/deno) | MIT | binary copied from `denoland/deno:bin` |
+| [FFmpeg](https://ffmpeg.org/) | LGPL-2.1-or-later / GPL-2.0-or-later depending on the build | installed from the Debian `ffmpeg` package |
+| [FastAPI](https://github.com/fastapi/fastapi) | MIT | |
+| [Starlette](https://github.com/encode/starlette) | BSD-3-Clause | |
+| [Uvicorn](https://github.com/encode/uvicorn) | BSD-3-Clause | |
+| [Pydantic](https://github.com/pydantic/pydantic) | MIT | |
+| [PyYAML](https://github.com/yaml/pyyaml) | MIT | |
+| [HTTPX](https://github.com/encode/httpx) | BSD-3-Clause | development and end-to-end tests |
+| [mutagen](https://github.com/quodlibet/mutagen) | GPL-2.0-or-later | pulled in by `yt-dlp[default]`, used for tags and cover art |
+| [Debian](https://www.debian.org/) base packages | mixed (mostly GPL/LGPL/BSD) | `python:3.12-slim` base image |
+
+The canonical licence text of each component ships with the component itself
+(Python package metadata, `/usr/share/doc` in the image, or the upstream
+repository). Redistributing the image means redistributing those components, so
+keep this file and the upstream notices together with any copy you publish.
+
+"YouTube" and "Audiobookshelf" are trademarks of their respective owners. This
+project is not affiliated with, endorsed by or sponsored by either of them.

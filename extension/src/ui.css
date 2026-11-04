@@ -1,0 +1,279 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --text: #1c2126;
+  --muted: #5f6b76;
+  --border: #d8dee5;
+  --accent: #2456a6;
+  --accent-text: #ffffff;
+  --ok: #2e7d32;
+  --err: #b3261e;
+  --pending: #8a5a00;
+  --radius: 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1f24;
+    --panel: #242a31;
+    --text: #e8edf2;
+    --muted: #a2adb8;
+    --border: #3a434d;
+    --accent: #6ea8ff;
+    --accent-text: #0d1520;
+    --ok: #7bd389;
+    --err: #ff8a80;
+    --pending: #ffcf70;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font: 13px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body.popup {
+  width: 340px;
+}
+
+body.options {
+  min-height: 100vh;
+  padding: 28px 18px;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.popup .bar {
+  position: sticky;
+  top: 0;
+}
+
+.logo {
+  width: 20px;
+  height: 20px;
+}
+
+.brand {
+  font-weight: 650;
+  letter-spacing: 0.2px;
+  flex: 1;
+}
+
+main {
+  padding: 12px;
+}
+
+.options main,
+.options .bar,
+.options footer,
+.options form {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.options main {
+  padding: 18px 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: 18px;
+  padding: 20px;
+}
+
+.title {
+  font-size: 14px;
+  line-height: 1.35;
+  margin: 0 0 4px;
+}
+
+.channel,
+.policy,
+.detail,
+.hint,
+.muted {
+  color: var(--muted);
+}
+
+.channel {
+  margin: 0 0 2px;
+}
+
+.policy {
+  margin: 0 0 10px;
+  font-size: 12px;
+}
+
+.status-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.status {
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 2px 9px;
+  border: 1px solid currentColor;
+}
+
+.status.ok {
+  color: var(--ok);
+}
+
+.status.err {
+  color: var(--err);
+}
+
+.status.pending {
+  color: var(--pending);
+}
+
+.status.muted {
+  color: var(--muted);
+}
+
+.detail {
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  font: inherit;
+  padding: 7px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+button.icon {
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  padding: 2px 6px;
+}
+
+.lead {
+  margin: 4px 0 12px;
+}
+
+.error {
+  margin: 10px 0 0;
+  color: var(--err);
+  font-size: 12px;
+}
+
+.hint {
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+
+footer {
+  padding: 8px 12px 10px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin: 14px 0 4px;
+}
+
+input[type="url"],
+input[type="password"],
+input[type="text"] {
+  width: 100%;
+  font: inherit;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin: 0 0 18px;
+}
+
+legend {
+  font-weight: 650;
+  padding: 0 6px;
+}
+
+.options h1 {
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+.options .actions {
+  margin-top: 16px;
+}
+
+#message {
+  min-height: 20px;
+  font-size: 12px;
+  margin-top: 14px;
+}
+
+#message.ok {
+  color: var(--ok);
+}
+
+#message.err {
+  color: var(--err);
+}
+
+dl.meta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  font-size: 12px;
+}
+
+dl.meta dt {
+  color: var(--muted);
+}

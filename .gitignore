@@ -1,0 +1,53 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# Local configuration and secrets (never commit)
+config.yaml
+config.*.yaml
+!config.example.yaml
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+
+# yt2abs media downloads
+downloads/
+*.m4a
+*.mp3
+
+# Local runtime data (SQLite, tmp downloads, E2E sandbox)
+data/
+.e2e/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite*
+
+# Per-task worktrees and ephemeral scratch (task-local, never committed)
+.worktrees/
+scratch/
+
+# Archived material (workspace convention: .trash-YYYYMMDD)
+.trash-*/
+
+# Node / build artifacts and packaged extension
+node_modules/
+dist/
+build/
+web-ext-artifacts/
+*.xpi
+
+# Logs
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db

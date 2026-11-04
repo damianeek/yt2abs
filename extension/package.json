@@ -1,0 +1,13 @@
+{
+  "name": "yt2abs-firefox",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Firefox WebExtension (Manifest V3) for yt2abs",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "lint": "npx --yes web-ext@10 lint --source-dir src",
+    "build": "npx --yes web-ext@10 build --source-dir src --artifacts-dir dist --overwrite-dest",
+    "sign": "npx --yes web-ext@10 sign --source-dir src --artifacts-dir dist --channel=unlisted",
+    "start": "npx --yes web-ext@10 run --source-dir src --firefox=${FIREFOX_BIN:-firefox}"
+  }
+}

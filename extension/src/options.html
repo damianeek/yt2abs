@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>yt2abs — settings</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="options">
+    <header class="bar">
+      <img src="icons/icon-32.png" alt="" class="logo" />
+      <span class="brand">yt2abs</span>
+    </header>
+    <main>
+      <h1>Extension settings</h1>
+      <p class="muted">
+        The extension sends YouTube videos to your yt2abs server, which downloads them
+        and adds them as podcast episodes in Audiobookshelf.
+      </p>
+
+      <form id="form" autocomplete="off">
+        <label for="server">Server address</label>
+        <input id="server" type="text" inputmode="url" spellcheck="false" placeholder="https://abs.example.com" />
+        <p class="hint">
+          Address where yt2abs runs (same host as Audiobookshelf), without a
+          trailing slash. For LAN: <code>http://192.168.1.10:13381</code>.
+        </p>
+
+        <p class="hint">
+          yt2abs runs without authentication on your LAN, so only the address is
+          needed. Nothing secret is stored in the browser.
+        </p>
+
+        <div class="actions">
+          <button type="submit" class="primary">Save</button>
+          <button type="button" id="test">Test connection</button>
+        </div>
+        <p id="message" role="status"></p>
+      </form>
+
+      <fieldset>
+        <legend>How it works</legend>
+        <dl class="meta">
+          <dt>Button</dt>
+          <dd>active on <code>/watch</code> and <code>/shorts</code>; badge ✓ = episode already in ABS</dd>
+          <dt>Shortcut</dt>
+          <dd><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Y</kbd> — send the current video</dd>
+          <dt>Menu</dt>
+          <dd>“Send to ABS” on a thumbnail or link (without opening the video)</dd>
+          <dt>Keep</dt>
+          <dd>“Keep forever” sets <code>retention_override=0</code>, so retention will not delete the episode</dd>
+          <dt>Version</dt>
+          <dd id="version">—</dd>
+        </dl>
+      </fieldset>
+    </main>
+    <script src="lib.js"></script>
+    <script src="api.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

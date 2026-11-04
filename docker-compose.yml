@@ -1,0 +1,73 @@
+# yt2abs - runs next to Audiobookshelf and writes into the same library mount.
+#
+# Prerequisites:
+#   1. Create config.yaml from config.example.yaml.
+#   2. Create .env with ABS_API_KEY, ABS_LIBRARY_ID and (on Unraid) PUID/PGID.
+#      Optional: DISCORD_WEBHOOK_URL for notifications (see
+#      docs/discord-notifications.md).
+#   3. The host path mounted at /youtube-podcasts MUST be the same directory
+#      that Audiobookshelf mounts at /youtube-podcasts.
+services:
+  yt2abs:
+    build: .
+    # Image from CI: set YT2ABS_IMAGE=ghcr.io/damianeek/yt2abs-public:dev
+    image: ${YT2ABS_IMAGE:-yt2abs:0.3.0}
+    container_name: yt2abs
+    restart: unless-stopped
+    environment:
+      ABS_URL: ${ABS_URL:-http://192.168.1.10:13378}
+      ABS_API_KEY: ${ABS_API_KEY:?set ABS_API_KEY in .env}
+      ABS_LIBRARY_ID: ${ABS_LIBRARY_ID:?set ABS_LIBRARY_ID in .env}
+      ABS_LIBRARY_PATH: /youtube-podcasts
+      YT2ABS_LIBRARY_DIR: /youtube-podcasts
+      YT2ABS_TMP_DIR: /tmp-downloads
+      YT2ABS_DATA_DIR: /data
+      # No authentication: LAN-only service, the published port is the access
+      # control.  Keep YT2ABS_BIND_ADDR on a private address.
+      # Optional public https address of the reverse proxy (bookmarklet links).
+      YT2ABS_PUBLIC_URL: ${YT2ABS_PUBLIC_URL:-}
+      # Forwarding headers are trusted only from these CIDRs (the reverse proxy).
+      # Leave empty when the port is reachable from clients directly.
+      YT2ABS_TRUST_PROXY: ${YT2ABS_TRUST_PROXY:-0}
+      YT2ABS_TRUSTED_PROXIES: ${YT2ABS_TRUSTED_PROXIES:-}
+      YT2ABS_API_RATE_LIMIT: ${YT2ABS_API_RATE_LIMIT:-60}
+      YT2ABS_PUBLIC_RATE_LIMIT: ${YT2ABS_PUBLIC_RATE_LIMIT:-10}
+      YT2ABS_RETENTION_INTERVAL_MINUTES: ${YT2ABS_RETENTION_INTERVAL_MINUTES:-60}
+      # Playlist polling ("add from phone"); 0 disables, empty = config decides.
+      YT2ABS_PLAYLIST_ENABLED: ${YT2ABS_PLAYLIST_ENABLED:-}
+      YT2ABS_YTDLP_UPDATE: ${YT2ABS_YTDLP_UPDATE:-1}
+      YT2ABS_YTDLP_UPDATE_INTERVAL_HOURS: ${YT2ABS_YTDLP_UPDATE_INTERVAL_HOURS:-24}
+      DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL:-}
+      DISCORD_USERNAME: ${DISCORD_USERNAME:-}
+      DISCORD_NOTIFY_DISABLED: ${DISCORD_NOTIFY_DISABLED:-0}
+      DISCORD_NOTIFY_TIMEOUT: ${DISCORD_NOTIFY_TIMEOUT:-10}
+      DISCORD_NOTIFY_EVENTS: ${DISCORD_NOTIFY_EVENTS:-imported,failed}
+      # Generic kill switch for both channels (Discord and ntfy).
+      NOTIFY_DISABLED: ${NOTIFY_DISABLED:-0}
+      # ntfy: error-only channel, disabled while NTFY_TOPIC is empty.
+      NTFY_TOPIC: ${NTFY_TOPIC:-}
+      NTFY_URL: ${NTFY_URL:-https://ntfy.sh}
+      NTFY_TOKEN: ${NTFY_TOKEN:-}
+      NTFY_NOTIFY_DISABLED: ${NTFY_NOTIFY_DISABLED:-0}
+      NTFY_NOTIFY_TIMEOUT: ${NTFY_NOTIFY_TIMEOUT:-10}
+      NTFY_NOTIFY_EVENTS: ${NTFY_NOTIFY_EVENTS:-failed,deleted}
+      TZ: ${TZ:-Europe/Warsaw}
+    ports:
+      # Never publish on every interface by default. 127.0.0.1 keeps the port on
+      # the host only (reverse proxy on the same host, or a docker network);
+      # set YT2ABS_BIND_ADDR=192.168.1.10 for a LAN-only listener. 0.0.0.0 is only
+      # safe behind a firewall/ACL on the port.
+      - "${YT2ABS_BIND_ADDR:-127.0.0.1}:${YT2ABS_HTTP_PORT:-8099}:8080"
+    volumes:
+      - ${YT2ABS_LIBRARY_HOST:-/mnt/user/media/youtube-podcasts}:/youtube-podcasts
+      - ${YT2ABS_TMP_HOST:-/mnt/user/media/yt2abs-tmp}:/tmp-downloads
+      - ${YT2ABS_DATA_HOST:-./data}:/data
+      - ${YT2ABS_CONFIG:-./config.yaml}:/app/config.yaml:ro
+    user: "${PUID:-99}:${PGID:-100}"
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s

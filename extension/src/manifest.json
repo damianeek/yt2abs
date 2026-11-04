@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "yt2abs",
+  "version": "0.1.0",
+  "description": "Send YouTube videos to Audiobookshelf via yt2abs.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "yt2abs@example.org",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "142.0"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": ["storage", "tabs", "menus", "notifications"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "background": {
+    "scripts": ["lib.js", "api.js", "background.js"]
+  },
+  "action": {
+    "default_title": "yt2abs",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "send-current": {
+      "suggested_key": {
+        "default": "Alt+Shift+Y"
+      },
+      "description": "Send the current video to ABS"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
