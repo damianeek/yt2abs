@@ -1,0 +1,32 @@
+{
+  "video_id": "sI_MzL3HIa0",
+  "url": "https://www.youtube.com/watch?v=sI_MzL3HIa0",
+  "channel_id": "UCzz4CoEgSgWNs9ZAvRMhW2A",
+  "sponsor_segment": {
+    "start": 81.503,
+    "end": 100.767
+  },
+  "results": {
+    "off": {
+      "file": "<workdir>/off/2022-03-03 - Renault Megane e-Tech： A QUIETLY brilliant, very French EV [sI_MzL3HIa0].m4a",
+      "duration": 1282.787,
+      "mode": "off"
+    },
+    "remove": {
+      "file": "<workdir>/remove/2022-03-03 - Renault Megane e-Tech： A QUIETLY brilliant, very French EV [sI_MzL3HIa0].m4a",
+      "duration": 1263.523,
+      "mode": "remove"
+    },
+    "mute": {
+      "file": "<workdir>/mute/2022-03-03 - Renault Megane e-Tech： A QUIETLY brilliant, very French EV [sI_MzL3HIa0].m4a",
+      "duration": 1282.787,
+      "mode": "mute",
+      "muted": true
+    },
+    "volume_in_sponsor_window_db": {
+      "off": -17.8,
+      "mute": -91.0
+    }
+  },
+  "failures": []
+}

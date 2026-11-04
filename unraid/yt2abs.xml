@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>yt2abs</Name>
+  <Repository>ghcr.io/damianeek/yt2abs-public:latest</Repository>
+  <Registry>https://github.com/damianeek/yt2abs-public/pkgs/container/yt2abs</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/damianeek/yt2abs-public/issues</Support>
+  <Project>https://github.com/damianeek/yt2abs-public</Project>
+  <Overview>YouTube audio to Audiobookshelf as podcast episodes. The container downloads audio via yt-dlp, sends it to the ABS library and deletes episodes after the retention period. The :latest image is the stable release. Before the first start, create /mnt/user/appdata/yt2abs/config.yaml based on config.example.yaml from the repository.</Overview>
+  <Category>MediaApp:Podcast MediaApp:Other</Category>
+  <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+  <Icon/>
+  <ExtraParams>--restart=unless-stopped --user=99:100</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI port" Target="8080" Default="8099" Mode="tcp" Description="HTTP port on the host. LAN-only service with no authentication - do not publish it on a public address." Type="Port" Display="always" Required="true" Mask="false">8099</Config>
+  <Config Name="Config dir" Target="/config" Default="/mnt/user/appdata/yt2abs" Mode="rw" Description="App directory: config.yaml, SQLite database, yt-dlp binary. Owner 99:100." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/yt2abs</Config>
+  <Config Name="Library" Target="/youtube-podcasts" Default="/mnt/user/media/youtube-podcasts" Mode="rw" Description="The same host directory that Audiobookshelf mounts as the podcast library." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/media/youtube-podcasts</Config>
+  <Config Name="Temp downloads" Target="/tmp-downloads" Default="/mnt/user/media/yt2abs-tmp" Mode="rw" Description="Temporary directory. Best on the same filesystem as the library (fast rename)." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/media/yt2abs-tmp</Config>
+  <Config Name="ABS_URL" Target="ABS_URL" Default="http://192.168.1.10:13378" Mode="" Description="Audiobookshelf address as seen from the yt2abs container." Type="Variable" Display="always" Required="true" Mask="false">http://192.168.1.10:13378</Config>
+  <Config Name="ABS_API_KEY" Target="ABS_API_KEY" Default="" Mode="" Description="Audiobookshelf API key (Settings - API Keys)." Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="ABS_LIBRARY_ID" Target="ABS_LIBRARY_ID" Default="" Mode="" Description="Podcast library ID in ABS (GET /api/libraries)." Type="Variable" Display="always" Required="true" Mask="false"></Config>
+  <Config Name="ABS_LIBRARY_PATH" Target="ABS_LIBRARY_PATH" Default="/youtube-podcasts" Mode="" Description="Library path as seen by ABS and by this container. Do not change without changing the mount." Type="Variable" Display="advanced" Required="false" Mask="false">/youtube-podcasts</Config>
+  <Config Name="Library dir (yt2abs)" Target="YT2ABS_LIBRARY_DIR" Default="/youtube-podcasts" Mode="" Description="Library path inside the container. Must match the Library mount." Type="Variable" Display="advanced" Required="false" Mask="false">/youtube-podcasts</Config>
+  <Config Name="Temp dir (yt2abs)" Target="YT2ABS_TMP_DIR" Default="/tmp-downloads" Mode="" Description="Temporary directory path inside the container." Type="Variable" Display="advanced" Required="false" Mask="false">/tmp-downloads</Config>
+  <Config Name="Data dir (yt2abs)" Target="YT2ABS_DATA_DIR" Default="/config/data" Mode="" Description="SQLite, bin/ for yt-dlp. Must be inside the mounted /config." Type="Variable" Display="advanced" Required="false" Mask="false">/config/data</Config>
+  <Config Name="Config file (yt2abs)" Target="YT2ABS_CONFIG" Default="/config/config.yaml" Mode="" Description="config.yaml path. The file must exist before start." Type="Variable" Display="advanced" Required="false" Mask="false">/config/config.yaml</Config>
+  <Config Name="yt-dlp bin dir" Target="YT2ABS_YTDLP_BIN_DIR" Default="/config/data/bin" Mode="" Description="Install location of the updated yt-dlp. Must be inside the mounted /config, otherwise the update is lost on restart." Type="Variable" Display="advanced" Required="false" Mask="false">/config/data/bin</Config>
+  <Config Name="Public URL" Target="YT2ABS_PUBLIC_URL" Default="" Mode="" Description="Public HTTPS address of the reverse proxy, e.g. https://yt2abs.example.com (bookmarklet links)." Type="Variable" Display="always" Required="false" Mask="false"></Config>
+  <Config Name="Trust proxy" Target="YT2ABS_TRUST_PROXY" Default="0" Mode="" Description="1 = honour X-Forwarded-For only from YT2ABS_TRUSTED_PROXIES addresses." Type="Variable" Display="advanced" Required="false" Mask="false">0</Config>
+  <Config Name="Trusted proxies" Target="YT2ABS_TRUSTED_PROXIES" Default="" Mode="" Description="Exact reverse proxy address in CIDR, e.g. 10.1.2.1/32. Separate several with commas." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="API rate limit" Target="YT2ABS_API_RATE_LIMIT" Default="60" Mode="" Description="API request limit per minute per client IP. 0 = no limit." Type="Variable" Display="advanced" Required="false" Mask="false">60</Config>
+  <Config Name="Public rate limit" Target="YT2ABS_PUBLIC_RATE_LIMIT" Default="10" Mode="" Description="/add request limit per minute per client IP." Type="Variable" Display="advanced" Required="false" Mask="false">10</Config>
+  <Config Name="Retention interval" Target="YT2ABS_RETENTION_INTERVAL_MINUTES" Default="60" Mode="" Description="How often to run the retention pass, in minutes." Type="Variable" Display="advanced" Required="false" Mask="false">60</Config>
+  <Config Name="Playlist enabled" Target="YT2ABS_PLAYLIST_ENABLED" Default="" Mode="" Description="Playlist polling kill-switch: 0 disables, empty = config.yaml decides." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="yt-dlp update" Target="YT2ABS_YTDLP_UPDATE" Default="1" Mode="" Description="1 = automatic yt-dlp update from PyPI." Type="Variable" Display="advanced" Required="false" Mask="false">1</Config>
+  <Config Name="yt-dlp update interval" Target="YT2ABS_YTDLP_UPDATE_INTERVAL_HOURS" Default="24" Mode="" Description="How often to check for yt-dlp updates, in hours." Type="Variable" Display="advanced" Required="false" Mask="false">24</Config>
+  <Config Name="Discord webhook" Target="DISCORD_WEBHOOK_URL" Default="" Mode="" Description="Full Discord webhook URL. Empty = disabled." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="Discord username" Target="DISCORD_USERNAME" Default="" Mode="" Description="Optional Discord notification sender name." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="Discord events" Target="DISCORD_NOTIFY_EVENTS" Default="imported,failed" Mode="" Description="Discord events: imported,retry,failed | all | none." Type="Variable" Display="advanced" Required="false" Mask="false">imported,failed</Config>
+  <Config Name="Notifications disabled" Target="NOTIFY_DISABLED" Default="0" Mode="" Description="1 = disables all notification channels." Type="Variable" Display="advanced" Required="false" Mask="false">0</Config>
+  <Config Name="ntfy topic" Target="NTFY_TOPIC" Default="" Mode="" Description="ntfy topic. Empty = channel disabled." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="ntfy URL" Target="NTFY_URL" Default="https://ntfy.sh" Mode="" Description="ntfy server address (root only)." Type="Variable" Display="advanced" Required="false" Mask="false">https://ntfy.sh</Config>
+  <Config Name="ntfy token" Target="NTFY_TOKEN" Default="" Mode="" Description="Bearer token for the protected ntfy topic." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="ntfy events" Target="NTFY_NOTIFY_EVENTS" Default="failed,deleted" Mode="" Description="ntfy events: failed,deleted | all | none." Type="Variable" Display="advanced" Required="false" Mask="false">failed,deleted</Config>
+  <Config Name="TZ" Target="TZ" Default="Europe/Warsaw" Mode="" Description="Container timezone." Type="Variable" Display="advanced" Required="false" Mask="false">Europe/Warsaw</Config>
+</Container>
