@@ -28,6 +28,10 @@ RUN pip install --no-cache-dir . \
     && python -c "import yt_dlp_ejs, mutagen; print('yt-dlp-ejs', yt_dlp_ejs.version, '| mutagen', mutagen.version)" \
     && yt-dlp --version
 
+# Writable runtime directory for the unprivileged user (SQLite, downloads, the
+# yt-dlp binary dir); bind mounts override it at run time.
+RUN mkdir -p /data && chown -R 99:100 /data
+
 # Unraid-friendly uid/gid; override with `docker run --user`.
 USER 99:100
 
