@@ -130,19 +130,19 @@ ss -ltnp | grep 8099
 
 ### Image from CI (dev / latest)
 
-Every push to `dev` builds and publishes `ghcr.io/damianeek/yt2abs-public:dev`;
+Every push to `dev` builds and publishes `ghcr.io/damianeek/yt2abs:dev`;
 `main` publishes `:latest`, and a `v*` tag — semver versions (`0.3.0`, `0.3`).
 Images are multi-arch (`linux/amd64`, `linux/arm64`) with an SBOM and a
 provenance attestation. Instead of building locally, pull the image from CI:
 
 ```bash
-export YT2ABS_IMAGE=ghcr.io/damianeek/yt2abs-public:v0.3.1
+export YT2ABS_IMAGE=ghcr.io/damianeek/yt2abs:v0.3.2
 docker compose pull
 docker compose up -d
 ```
 
 The image also ships `config.example.yaml` (`docker run --rm --entrypoint cat
-ghcr.io/damianeek/yt2abs-public:v0.3.1 /app/config.example.yaml`), so a standalone run
+ghcr.io/damianeek/yt2abs:v0.3.2 /app/config.example.yaml`), so a standalone run
 starts from that template. Or run it on its own (no compose file):
 
 ```bash
@@ -156,7 +156,7 @@ docker run -d --name yt2abs --restart unless-stopped \
   -e YT2ABS_DATA_DIR=/data -e YT2ABS_TMP_DIR=/tmp-downloads \
   -e YT2ABS_LIBRARY_DIR=/youtube-podcasts \
   -e ABS_URL=http://192.168.1.10:13378 -e ABS_API_KEY=... -e ABS_LIBRARY_ID=... \
-  ghcr.io/damianeek/yt2abs-public:v0.3.1
+  ghcr.io/damianeek/yt2abs:v0.3.2
 ```
 
 `:sha-<7>` is an immutable tag for rollbacks, and every tag can be pinned by

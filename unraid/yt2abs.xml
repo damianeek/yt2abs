@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>yt2abs</Name>
-  <Repository>ghcr.io/damianeek/yt2abs-public:latest</Repository>
-  <Registry>https://github.com/damianeek/yt2abs-public/pkgs/container/yt2abs</Registry>
+  <Repository>ghcr.io/damianeek/yt2abs:latest</Repository>
+  <Registry>https://github.com/damianeek/yt2abs/pkgs/container/yt2abs</Registry>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support>https://github.com/damianeek/yt2abs-public/issues</Support>
-  <Project>https://github.com/damianeek/yt2abs-public</Project>
+  <Support>https://github.com/damianeek/yt2abs/issues</Support>
+  <Project>https://github.com/damianeek/yt2abs</Project>
   <Overview>YouTube audio to Audiobookshelf as podcast episodes. The container downloads audio via yt-dlp, sends it to the ABS library and deletes episodes after the retention period. The :latest image is the stable release. Before the first start, create /mnt/user/appdata/yt2abs/config.yaml based on config.example.yaml from the repository.</Overview>
   <Category>MediaApp:Podcast MediaApp:Other</Category>
   <WebUI>http://[IP]:[PORT:8080]/</WebUI>

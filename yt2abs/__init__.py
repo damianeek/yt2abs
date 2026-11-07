@@ -4,4 +4,4 @@ SponsorBlock module: see :mod:`yt2abs.sponsorblock`.
 Configuration: :mod:`yt2abs.config` (config.yaml, channels section).
 """
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"

@@ -1,9 +1,9 @@
 # yt2abs on Unraid
 
 Template: [`yt2abs.xml`](yt2abs.xml). By default it installs the image
-`ghcr.io/damianeek/yt2abs-public:dev` (current code from the `dev` branch). For the
+`ghcr.io/damianeek/yt2abs:dev` (current code from the `dev` branch). For the
 stable version, change the **Repository** field in Unraid to
-`ghcr.io/damianeek/yt2abs-public:latest` (or `:sha-<7>` for a rollback).
+`ghcr.io/damianeek/yt2abs:latest` (or `:sha-<7>` for a rollback).
 
 ## Requirements
 
@@ -100,7 +100,7 @@ docker logs --tail 100 yt2abs
 - **Dev**: every push to `dev` publishes a new `:dev` tag; in Unraid use
   *Check for Updates* / *Force Update*.
 - **Stable**: change Repository to `:latest`.
-- **Rollback**: set Repository to `ghcr.io/damianeek/yt2abs-public:sha-<7>`
+- **Rollback**: set Repository to `ghcr.io/damianeek/yt2abs:sha-<7>`
   (the commit number from the workflow log) and run *Force Update*.
 
 Data in `/mnt/user/appdata/yt2abs` (SQLite, `data/bin`) and the library stay

@@ -4,8 +4,8 @@ The repository has two long-lived branches:
 
 | Branch | Role | Image |
 | --- | --- | --- |
-| `dev` | current work, integration, live tests | `ghcr.io/damianeek/yt2abs-public:dev` |
-| `main` | stable version, only verified changes | `ghcr.io/damianeek/yt2abs-public:latest` |
+| `dev` | current work, integration, live tests | `ghcr.io/damianeek/yt2abs:dev` |
+| `main` | stable version, only verified changes | `ghcr.io/damianeek/yt2abs:latest` |
 
 The current version of the code lives on `dev`. `main` is fast-forwarded from
 `dev` only after the tests pass; we do not develop directly on `main`.
@@ -98,13 +98,13 @@ added to `/boot/config/go` (keep the token outside the repo, e.g. in
 Compose builds locally by default, but you can point it at an image from CI:
 
 ```bash
-export YT2ABS_IMAGE=ghcr.io/damianeek/yt2abs-public:dev
+export YT2ABS_IMAGE=ghcr.io/damianeek/yt2abs:dev
 docker compose pull
 docker compose up -d
 curl -fsS http://127.0.0.1:8099/health
 ```
 
-Rollback: set `YT2ABS_IMAGE=ghcr.io/damianeek/yt2abs-public:sha-<7>` and run
+Rollback: set `YT2ABS_IMAGE=ghcr.io/damianeek/yt2abs:sha-<7>` and run
 `docker compose up -d`. The same `sha-<7>` number is printed in the workflow log
 and visible in the package description.
 
@@ -112,4 +112,4 @@ and visible in the package description.
 
 Ready-made template: [`unraid/yt2abs.xml`](../unraid/yt2abs.xml), instructions:
 [`unraid/README.md`](../unraid/README.md). The template points to `:dev`; for
-the stable version, change Repository to `ghcr.io/damianeek/yt2abs-public:latest`.
+the stable version, change Repository to `ghcr.io/damianeek/yt2abs:latest`.
