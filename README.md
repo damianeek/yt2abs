@@ -119,7 +119,7 @@ host can see the port (a reverse proxy on the same host or the Docker network).
 For LAN-only access set `YT2ABS_BIND_ADDR=192.168.1.10` (the host address), never
 `0.0.0.0` on a machine with a public interface. Safest: do not publish the port
 at all (remove `ports:`) and put NPM on the same Docker network, entering the
-**exact** NPM address as `/32` in `api.trusted_proxies` (e.g. `10.1.2.1/32` —
+**exact** NPM address as `/32` in `api.trusted_proxies` (e.g. `192.168.1.5/32` —
 the same one you see as `client_addr` in the access log). To check what is
 actually listening:
 
@@ -405,7 +405,7 @@ or a reverse proxy on the same host with its own LAN ACL (e.g. NPM:
   covers **everyone** (`0.0.0.0/0`, `::/0`, and also `0.0.0.0/1` +
   `128.0.0.0/1`) also only warns — set `api.trust_any_peer: true` (env:
   `YT2ABS_TRUST_ANY_PEER=1`) when that is deliberate. Entries with host bits
-  (`10.1.2.1/8`) are rejected, and prefixes wider than `/16` (IPv4) and `/48`
+  (`192.168.1.5/8`) are rejected, and prefixes wider than `/16` (IPv4) and `/48`
   (IPv6) log a warning. Uvicorn starts with `--no-proxy-headers` so it does not
   overwrite `scope.client` with its own, less strict interpretation of XFF.
 - `api.public_url` is optional; it tells the app its own https address behind a
@@ -425,11 +425,11 @@ location / {
 ```
 
 In `config.yaml` set the proxy allow-list then: `trust_proxy: false`,
-`trusted_proxies: ["10.1.2.1/32"]` — the exact NPM address seen as
+`trusted_proxies: ["192.168.1.5/32"]` — the exact NPM address seen as
 `client_addr` in the access log (usually the reverse proxy address, not the whole
-`172.16.0.0/12`). An entry with host bits (`10.1.2.1/8`) is rejected at startup
+`172.16.0.0/12`). An entry with host bits (`192.168.1.5/8`) is rejected at startup
 because it would silently widen trust to the whole network. An address in the
-form `::ffff:10.1.2.1/128` (dual-stack listener) is reduced to `10.1.2.1/32`.
+form `::ffff:192.168.1.5/128` (dual-stack listener) is reduced to `192.168.1.5/32`.
 
 **The proxy must always append its own `X-Forwarded-For` line** — nginx:
 `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for`, HAProxy:
@@ -674,8 +674,8 @@ api:
   rate_limit_per_minute: 60    # 0 = no limit
   public_rate_limit_per_minute: 10
   # X-Forwarded-For / X-Real-IP are trusted only from addresses in this CIDR list.
-  # Enter the EXACT proxy address as /32 (e.g. 10.1.2.1/32) - the same one
-  # you see as `client_addr` in the access log. An entry with host bits (10.1.2.1/8)
+  # Enter the EXACT proxy address as /32 (e.g. 192.168.1.5/32) - the same one
+  # you see as `client_addr` in the access log. An entry with host bits (192.168.1.5/8)
   # is rejected, and a prefix shorter than /16 (IPv4) / /48 (IPv6) warns.
   # Empty = headers ignored.
   trust_proxy: false          # true without a list: trusts every peer (warns)

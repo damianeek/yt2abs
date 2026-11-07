@@ -38,10 +38,10 @@ api:
   public_rate_limit_per_minute: 10 # GET /add (bookmarklet), per client IP; 0 = no limit
   # Forwarding headers are honoured ONLY when the TCP peer matches this list.
   # Enter the EXACT address the proxy shows as `client_addr` in the access log,
-  # e.g. 10.1.2.1/32.  Host bits (10.1.2.1/8) are rejected instead of silently
+  # e.g. 192.168.1.5/32.  Host bits (192.168.1.5/8) are rejected instead of silently
   # widening to 10.0.0.0/8; prefixes shorter than /16 (IPv4) / /48 (IPv6) warn.
   trust_proxy: false              # true + empty list: trusts every peer (warns)
-  trusted_proxies: []             # e.g. ["10.1.2.1/32"]
+  trusted_proxies: []             # e.g. ["192.168.1.5/32"]
   # A list that covers EVERY peer (0.0.0.0/0, ::/0 or split /1 prefixes) lets
   # any client spoof X-Forwarded-For and pick its own rate-limit bucket; the
   # app warns at startup.  Set this switch only if you accept that explicitly.
