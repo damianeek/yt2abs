@@ -1,7 +1,7 @@
 # yt2abs runtime image: Python + yt-dlp + ffmpeg + Deno (yt-dlp JS challenges).
 FROM denoland/deno:bin-2.9.8 AS deno
 
-FROM python:3.12-slim
+FROM python:3.15-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
